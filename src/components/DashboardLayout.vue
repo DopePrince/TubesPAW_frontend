@@ -31,13 +31,20 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar color="teal lighten-3" dark>
+
+    <v-app-bar color="teal lighten-3" dark height="85">
       <v-app-bar-nav-icon
         @click="drawer = true"
         color="white"
       ></v-app-bar-nav-icon>
-      <VSpacer />
+      <v-spacer></v-spacer>
+      <v-toolbar-title>
+        <v-img :src="title" height="300" width="300" style="margin-top:12%"></v-img>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn color="green">LOGIN</v-btn>
     </v-app-bar>
+
     <div class="fullheight pa-5">
       <router-view></router-view>
     </div>
@@ -57,6 +64,7 @@ export default {
         { title: "Trip Itinerary", to: "/trip" },
       ],
       logo: require("../assets/mini.png"),
+      title: require("../assets/logo_rmvd.png"),
     };
   },
 };
