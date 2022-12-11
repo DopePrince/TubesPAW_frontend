@@ -10,7 +10,7 @@
     >
       <v-list-item>
         <v-list-item-content>
-          <v-img max-height="100" max-width="100" :src="logo"></v-img>
+          <v-img max-height="100" max-width="100" :src="logo" style="margin-left:60px"></v-img>
         </v-list-item-content>
       </v-list-item>
 
