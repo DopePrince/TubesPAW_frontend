@@ -59,6 +59,7 @@ export default {
       group: null,
       items: [
         { title: "Dashboard", to: "/" },
+        { title: "Reservasi Kamar", to: "/kamar" },
         { title: "Room Service", to: "/room" },
         { title: "Food Service", to: "/food" },
         { title: "Trip Itinerary", to: "/trip" },

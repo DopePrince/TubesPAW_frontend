@@ -20,11 +20,11 @@ const router = new VueRouter({
                     name : "Root",
                     component : importComponent("DashboardIndex"),
                 },
-                // {
-                //     path:"/gd",
-                //     name:"Guided",
-                //     component: importComponent("TodoList/ListItem"),
-                // },
+                {
+                    path:"/kamar",
+                    name:"ReservasiKamar",
+                    component: importComponent("ToDoList/ReservasiKamar"),
+                },
             ],
         },
     ],
