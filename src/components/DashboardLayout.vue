@@ -26,7 +26,7 @@
         <v-img :src="title" height="300" width="300" style="margin-top:12%"></v-img>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn color="green"><v-icon style="margin-right:6px;" size="140%">mdi-login</v-icon>LOGIN</v-btn>
+      <v-btn color="green" @click="login"><v-icon style="margin-right:6px;" size="140%">mdi-login</v-icon>LOGIN</v-btn>
     </v-app-bar>
 
     <div class="fullheight pa-5">
@@ -51,6 +51,13 @@ export default {
       logo: require("../assets/mini.png"),
       title: require("../assets/logo_rmvd.png"),
     };
+  },
+  methods: {
+    login() {
+      this.$router.push({
+        name: "Login",
+      });
+    },
   },
 };
 </script>

@@ -27,6 +27,25 @@ const router = new VueRouter({
                 },
             ],
         },
+        {
+            path: "/register",
+            name: "Register",
+            component: importComponent("RegisterPage"),
+        },
+        {
+            path: "/login",
+            name: "Login",
+            component: importComponent("LoginPage"),
+        },
+        {
+            path: "/home",
+            name: "Home",
+            component: importComponent("HomePage"),
+        },
+        {
+            path: "*",
+            redirect: "/"
+        },
     ],
 });
 
