@@ -11,12 +11,12 @@ const router = new VueRouter({
     mode: "history",
     routes:[
         {
-            path:"/",
+            path:"/dashboard",
             name: "admin",
             component: importComponent("DashboardLayout"),
             children:[
                 {
-                    path:"/",
+                    path:"/DashboardIndex",
                     name : "Root",
                     component : importComponent("DashboardIndex"),
                 },
@@ -24,6 +24,11 @@ const router = new VueRouter({
                     path:"/kamar",
                     name:"ReservasiKamar",
                     component: importComponent("ToDoList/ReservasiKamar"),
+                },
+                {
+                    path:"/room",
+                    name:"RoomService",
+                    component: importComponent("ToDoList/ServiceKamar"),
                 },
             ],
         },
@@ -38,7 +43,7 @@ const router = new VueRouter({
             component: importComponent("LoginPage"),
         },
         {
-            path: "/home",
+            path: "/",
             name: "Home",
             component: importComponent("HomePage"),
         },

@@ -1,7 +1,13 @@
 <template>
     <v-main>
         <v-header>
-            
+            <v-app-bar color="teal lighten-3" dark height="85">
+            <v-toolbar-title>
+                <v-img :src="title" height="300" width="300" style="margin-top:12%"></v-img>
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn color="green" @click="login"><v-icon style="margin-right:6px;" size="140%">mdi-login</v-icon>LOGIN</v-btn>
+            </v-app-bar>
         </v-header>
         <!-- Carousel -->
         <v-carousel cycle height="550" hide-delimiter-background hide-delimiters show-arrows-on-hover>
@@ -65,7 +71,14 @@ export default {
                 'mdi-instagram',
             ],
         }
-    }
+    },
+    methods: {
+    login() {
+      this.$router.push({
+        name: "Login",
+      });
+    },
+  },
 };
 </script>
 

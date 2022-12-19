@@ -26,7 +26,7 @@
         <v-img :src="title" height="300" width="300" style="margin-top:12%"></v-img>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn color="green" @click="login"><v-icon style="margin-right:6px;" size="140%">mdi-login</v-icon>LOGIN</v-btn>
+      
     </v-app-bar>
 
     <div class="fullheight pa-5">
@@ -42,11 +42,11 @@ export default {
       drawer: false,
       group: null,
       items: [
-        { title: "Dashboard", to: "/" },
         { title: "Reservasi Kamar", to: "/kamar" },
         { title: "Room Service", to: "/room" },
         { title: "Food Service", to: "/food" },
-        { title: "Trip Itinerary", to: "/trip" },
+        { title: "Paket Wisata", to: "/trip" },
+        { title: "LogOut", to: "/" },
       ],
       logo: require("../assets/mini.png"),
       title: require("../assets/logo_rmvd.png"),

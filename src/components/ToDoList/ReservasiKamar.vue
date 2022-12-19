@@ -25,7 +25,7 @@
                   style="margin-top: 30px" >
                 </v-text-field>
                 <v-spacer></v-spacer>
-                <v-btn color="success" dark @click="dialog = true">Tambah</v-btn>
+                <v-btn color="success" dark @click="tambah">Tambah</v-btn>
             </v-card-title>
         </v-card>
 
@@ -41,93 +41,82 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card>
                 <v-card-title>
-                    <span class="headline">Form Todo List</span>
+                    <span class="headline">Pesan Kamar</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
+                        <!-- <v-select
+                            v-model="formTodo.tipeKamar"
+                            :items="['Deluxe', 'Standar' , 'Semi-Standar']"
+                            label = "TipeKamar"
+                            required>
+                        </v-select> -->
+
+                        <v-select
+                        v-model="formTodo.kamar"
+                        :items="kamars"
+                        item-text="tipe_kamar"
+                        item-value="id"
+                        label="Select"
+                        persistent-hint
+                        return-object
+                        single-line
+                        ></v-select>
+
                         <v-text-field
-                            v-model="formTodo.task"
-                            label="Task"
+                            v-model="formTodo.lama_menginap"
+                            label="LamaInap"
                             required>
                         </v-text-field>
-
-                        <v-select
-                            v-model="formTodo.priority"
-                            :items="['penting', 'biasa' , 'tidak penting']"
-                            label = "Priority"
-                            required>
-                        </v-select>
-
-                        <v-textarea
-                            v-model="formTodo.note"
-                            label="Note"
-                            required>
-                        </v-textarea>
-
-                        <v-select
-                            v-model="formTodo.status"
-                            :items="['belum selesai', 'selesai']"
-                            label="Status"
-                            required>
-                        </v-select>
                     </v-container>
                 </v-card-text>
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="cancel">Cancel</v-btn>
-                    <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                    <v-btn v-if="formTodo.id_update==0" color="blue darken-1" text @click="addBookings">Save</v-btn>
+                    <v-btn v-else color="blue darken-1" text @click="updateBookings">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
     </v-main>
 </template>
 <script>
+import axios from 'axios';
 export default {
     name: "ListItem",
+    
+    
+    
     data(){
         return {
+            formTodo : {
+                kamar: undefined,
+                lama_menginap : undefined,
+                id_update: 0
+            },
+            kamars : [],
             search: null,
             dialog: false,
             headers: [
                 {
-                    text: "Task",
+                    text: "Tipe Kamar",
                     align: "start",
                     sortable: true,
-                    value: "task",
+                    value: "id_kamar",
                 },
-                { text: "Priority", value: "priority" },
-                { text: "Note", value: "note" },
-                { text: "Status", value: "status" },
+                { text: "Lama Inap", value: "lama_menginap" },
                 { text: "Action", value: "action" },
             ],
-            todos:[
-                {
-                    task: "Coding",
-                    priority: "Penting",
-                    note: "Code for your life",
-                    status: "Belum Selesai",
-                },
-                {
-                    task: "Cooking",
-                    priority: "Biasa",
-                    note: "Indomie saat begadang ngerjain coding terbaek",
-                    status: "Selesai",
-                },
-                {
-                    task: "Gaming",
-                    priority: "Tidak Penting",
-                    note: "Wasting time",
-                    status: "Belum Selesai",
-                },
-            ],
-                formTodo: {     
-                    task: null,
-                    priority: null,
-                    note: null,
-                    status: null,
-                },
+            todos:[],
+      
             };
+        },
+        mounted(){
+            
+                this.showBookings();
+                this.showKamar();
+
         },
         methods: {
             save(){
@@ -141,12 +130,108 @@ export default {
             },
             resetForm(){
                 this.formTodo = {
-                    task: null,
-                    priority: null,
-                    note: null,
-                    status: null,
+                    kamar: undefined,
+                    lama_menginap : undefined,
+                    id_update: 0
                 };
             },
+            tambah(){
+                this.dialog=true;
+            },
+            showKamar(){
+                axios.get('http://localhost:8000/api/kamars', {
+
+                })
+                    .then((response) => {
+                    this.kamars = response.data.data
+                    console.log(this.kamars)
+                    })
+                    .catch((error) => {
+                    console.log(error)
+                    })
+             },
+             showBookings(){
+                axios.get('http://localhost:8000/api/bookings', {
+
+                })
+                    .then((response) => {
+                    this.todos = response.data.data
+                    
+                    })
+                    .catch((error) => {
+                    console.log(error)
+                    })
+             },
+             addBookings(){
+                axios.post('http://localhost:8000/api/bookings', {
+                    id_user: 1, // ini nanti dari yang local storage yaww
+                    id_kamar: this.formTodo.kamar.id,
+                    lama_menginap: this.formTodo.lama_menginap,
+                    status_pembayaran: 1,
+                    stat_cekInOrOut: 1,  
+                    id_karyawan: 1
+                }, {
+                    //ini buayt askese token
+                    // headers: {
+                    // 'Authorization': `Bearer ${access_token}`
+                    // }
+
+                })
+                    .then((response) => {
+                    console.log(response)
+                    this.dialog = false
+                    this.showBookings();
+                    })
+                    .catch((error) => {
+                    console.log(error.response.data)
+                    })
+             },
+             editItem(item){
+                this.formTodo.id_update = item.id
+                this.formTodo.lama_menginap = item.lama_menginap
+                this.dialog=true;
+             },
+            updateBookings(){
+                axios.put('http://localhost:8000/api/bookings/' + this.formTodo.id_update, {
+                    id_user: 1, // ini nanti dari yang local storage yaww
+                    id_kamar: this.formTodo.kamar.id,
+                    lama_menginap: this.formTodo.lama_menginap,
+                    status_pembayaran: 1,
+                    stat_cekInOrOut: 1,  
+                    id_karyawan: 1
+                }, {
+                    //ini buayt askese token
+                    // headers: {
+                    // 'Authorization': `Bearer ${access_token}`
+                    // }
+
+                })
+                    .then((response) => {
+                    console.log(response)
+                    this.dialog = false
+                    this.resetForm()
+                    this.showBookings();
+                    })
+                    .catch((error) => {
+                    console.log(error.response.data)
+                    })
+            },
+            deleteItem(item){
+                axios.delete('http://localhost:8000/api/bookings/' + item.id, {
+                    //ini buayt askese token
+                    // headers: {
+                    // 'Authorization': `Bearer ${access_token}`
+                    // }
+
+                })
+                    .then((response) => {
+                    console.log(response)
+                    this.showBookings();
+                    })
+                    .catch((error) => {
+                    console.log(error.response.data)
+                    })
+            }
         },
     };
 </script>
