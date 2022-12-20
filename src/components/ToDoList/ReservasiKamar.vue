@@ -9,7 +9,7 @@
                     >
                 </v-list-item-avatar>
                 <v-list-item-content>
-                    <v-list-item-title class="headline">Reservasi Kamar</v-list-item-title>
+                    <v-list-item-title class="headline">Bookings</v-list-item-title>
                 <v-list-item-subtitle >---A Hotel---</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -57,7 +57,7 @@
                         :items="kamars"
                         item-text="tipe_kamar"
                         item-value="id"
-                        label="Select"
+                        label="Tipe Kamar"
                         persistent-hint
                         return-object
                         single-line
@@ -65,9 +65,21 @@
 
                         <v-text-field
                             v-model="formTodo.lama_menginap"
-                            label="LamaInap"
+                            label="Lama Inap"
                             required>
                         </v-text-field>
+
+                        <v-select
+                        v-model="formTodo.kamar"
+                        :items="kamars"
+                        item-text="nama"
+                        item-value="id"
+                        label="Nama Karyawan"
+                        persistent-hint
+                        return-object
+                        single-line
+                        ></v-select>
+
                     </v-container>
                 </v-card-text>
 
@@ -85,17 +97,16 @@
 import axios from 'axios';
 export default {
     name: "ListItem",
-    
-    
-    
     data(){
         return {
             formTodo : {
                 kamar: undefined,
                 lama_menginap : undefined,
+                karyawan: undefined,
                 id_update: 0
             },
             kamars : [],
+            karyawans : [],
             search: null,
             dialog: false,
             headers: [
@@ -106,6 +117,7 @@ export default {
                     value: "id_kamar",
                 },
                 { text: "Lama Inap", value: "lama_menginap" },
+                { text: "Nama Karyawn", value: "nama" },
                 { text: "Action", value: "action" },
             ],
             todos:[],
@@ -113,10 +125,9 @@ export default {
             };
         },
         mounted(){
-            
-                this.showBookings();
-                this.showKamar();
-
+            this.showBookings();
+            this.showKamar();
+            this.showKaryawans();
         },
         methods: {
             save(){
@@ -132,6 +143,7 @@ export default {
                 this.formTodo = {
                     kamar: undefined,
                     lama_menginap : undefined,
+                    karyawan: undefined,
                     id_update: 0
                 };
             },
@@ -162,6 +174,18 @@ export default {
                     console.log(error)
                     })
              },
+             showKaryawans(){
+                axios.get('http://localhost:8000/api/karyawans', {
+
+                })
+                    .then((response) => {
+                    this.karyawans = response.data.data
+                    console.log(this.karyawans)
+                    })
+                    .catch((error) => {
+                    console.log(error)
+                    })
+             },
              addBookings(){
                 axios.post('http://localhost:8000/api/bookings', {
                     id_user: 1, // ini nanti dari yang local storage yaww
@@ -169,7 +193,7 @@ export default {
                     lama_menginap: this.formTodo.lama_menginap,
                     status_pembayaran: 1,
                     stat_cekInOrOut: 1,  
-                    id_karyawan: 1
+                    id_karyawan: this.formTodo.karyawan.id,
                 }, {
                     //ini buayt askese token
                     // headers: {
@@ -189,6 +213,7 @@ export default {
              editItem(item){
                 this.formTodo.id_update = item.id
                 this.formTodo.lama_menginap = item.lama_menginap
+                this.formTodo.nama = item.nama
                 this.dialog=true;
              },
             updateBookings(){
@@ -198,7 +223,7 @@ export default {
                     lama_menginap: this.formTodo.lama_menginap,
                     status_pembayaran: 1,
                     stat_cekInOrOut: 1,  
-                    id_karyawan: 1
+                    id_karyawan: this.formTodo.karyawan.id,
                 }, {
                     //ini buayt askese token
                     // headers: {

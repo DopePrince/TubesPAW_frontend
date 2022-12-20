@@ -42,8 +42,8 @@ export default {
       drawer: false,
       group: null,
       items: [
-        { title: "Reservasi Kamar", to: "/kamar" },
-        { title: "Room Service", to: "/room" },
+        { title: "Bookings", to: "/kamar" },
+        { title: "Service", to: "/room" },
         { title: "Food Service", to: "/food" },
         { title: "Paket Wisata", to: "/trip" },
         { title: "LogOut", to: "/" },

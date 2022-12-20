@@ -90,7 +90,7 @@
                         @click="submit"
                         type="submit"
                         class="blue darken-3 white--text mt-2"
-                        >Login
+                        >Submit
                       </v-btn>
                     </v-layout>
                   </v-form>
@@ -138,8 +138,7 @@ export default {
     submit() {
       if (this.$refs.form.validate()) {
         this.load = true;
-        this.$http
-          .post(this.$api + "/register", {
+        this.$http.post(this.$api + "/register", {
             nama: this.nama,
             umur: this.umur,
             gender: this.gender,

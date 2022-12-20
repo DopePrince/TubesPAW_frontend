@@ -81,6 +81,3 @@ export default {
   },
 };
 </script>
-
-<!-- Haii kenn aku bingung mau nambahin apa jadi aku buat komen di sini aja ayaa
-GOOD LUCK ^^ WKWKWKKW -->
