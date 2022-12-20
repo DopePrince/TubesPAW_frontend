@@ -1,47 +1,112 @@
 <template>
-        <div id="app">
-            <div id="login">
-                <div id="description">
-                    <h2>WELCOME</h2>
-                    <v-img :src="require('../assets/logo_rmvd.png')" aspect-ratio="1"></v-img>
-                    <p>Don't have an account yet ? Click here to <a @click="register"><u><i style="color:blue">Register</i></u></a></p>
-                </div>
-                <div id="form">
-                    <form @submit.prevent="doLogin">
-                        <label for="email">Email</label>
-                        <input type="text" id="email" v-model="email" placeholder="@gmail.com" autocomplete="off">
-
-                        <label for="password">Password</label>&nbsp;
-                        <i class="fas" :class="[passwordFieldIcon]" @click="hidePassword = !hidePassword"></i>
-                        <input :type="passwordFieldType" id="password" v-model="password" placeholder="**********">
-
-                        <button @click="login" type="submit">Log in</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+  <div id="app">
+    <div id="login">
+      <div id="description">
+        <h2>WELCOME</h2>
+        <v-img :src="logo" aspect-ratio="1"></v-img>
+        <p>
+          Don't have an account yet ? Click here to
+          <a @click="register"
+            ><u><i style="color: blue">Register</i></u></a
+          >
+        </p>
+      </div>
+      <div id="form">
+        <v-form v-model="valid" ref="form">
+          <v-text-field
+            label="Email"
+            v-model="email"
+            type="text"
+            placeholder="@gmail.com"
+            required
+          ></v-text-field>
+          <v-text-field
+            label="Password"
+            v-model="password"
+            type="password"
+            placeholder="********"
+            required
+          ></v-text-field>
+          <button @click="submit" type="submit" :disabled="!valid">
+            Log in
+          </button>
+        </v-form>
+      </div>
+    </div>
+    <v-snackbar v-model="snackbar" :color="statusColor" timeout="2000" bottom>
+      {{ error_message }}
+    </v-snackbar>
+    <v-snackbar v-model="success" color="green lighten-2" timeout="2000" bottom>
+      Email Verification Success
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "LoginPage",
-    components: {
-        // Something
-    },
-    data() {
-        return {
-            // something
-        };
-    },
-    methods: {
-        register() {
-            this.$router.push({
-                name: "Register",
-            });
-        }
-    }
-}
+  name: "LoginPage",
+  components: {
+    // Something
+  },
+  data() {
+    return {
+      logo: require("../assets/mini.png"),
+      load: false,
+      valid: false,
+      snackbar: false,
+      error_message: "",
+      statusColor: "",
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    submit() {
+      if (this.$refs.form.validate()) {
+        this.load = true;
+        this.$http
+          .post(this.$api + "/login", {
+            email: this.email,
+            password: this.password,
+          })
+          .then((response) => {
+            localStorage.setItem("id", response.data.user.id);
+            localStorage.setItem("tokenLogin", response.data.access_token);
 
+            this.error_message = response.data.message;
+            this.statusColor = "green";
+            this.snackbar = true;
+            this.load = false;
+            this.clear();
+            this.$router.push({
+              name: "Root",
+            });
+          })
+          .catch((error) => {
+            this.error_message = error.response.data.message;
+            this.statusColor = "red";
+            this.snackbar = true;
+            localStorage.removeItem("tokenLogin");
+            this.load = false;
+          });
+      }
+    },
+    register() {
+      this.$router.push({
+        name: "Register",
+      });
+    },
+    veriviedStatus() {
+      if (this.$route.query.verified == "success") {
+        this.success = true;
+        this.$router.push("/login");
+      }
+    },
+  },
+  mounted() {
+    this.veriviedStatus();
+  },
+};
 </script>
 
 <style>
@@ -65,7 +130,7 @@ div#app {
 
 div#app div#login {
   align-items: center;
-  background-color: #e2e2e5;
+  background-color: teal;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -76,6 +141,10 @@ div#app div#login div#description {
   background-color: #ffffff;
   width: 280px;
   padding: 35px;
+}
+
+div#app div#login div#description h2 {
+  text-align: center;
 }
 
 div#app div#login div#description v-img,
@@ -123,16 +192,20 @@ div#app div#login div#form ::placeholder {
 }
 
 div#app div#login div#form button {
-  background-color: #000000;
+  color: black;
+  background-color: white;
   cursor: pointer;
   border: none;
+  border-radius: 5px;
+  margin-top: 5px;
   padding: 10px;
   transition: background-color 0.2s ease-in-out;
   width: 100%;
 }
 
 div#app div#login div#form button:hover {
-  background-color: #eeeeee;
+  color: white;
+  background-color: black;
 }
 
 @media screen and (max-width: 600px) {
@@ -162,4 +235,3 @@ div#app div#login div#form button:hover {
   }
 }
 </style>
-
