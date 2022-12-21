@@ -30,6 +30,16 @@ const router = new VueRouter({
                     name:"RoomService",
                     component: importComponent("ToDoList/ServiceKamar"),
                 },
+                {
+                    path:"/food",
+                    name:"FoodService",
+                    component: importComponent("ToDoList/FoodService"),
+                },
+                {
+                    path:"/trip",
+                    name:"OrderWisata",
+                    component: importComponent("ToDoList/OrderWisata"),
+                },
             ],
         },
         {

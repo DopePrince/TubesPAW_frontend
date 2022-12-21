@@ -10,7 +10,7 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                     <v-list-item-title class="headline">Bookings</v-list-item-title>
-                <v-list-item-subtitle >---A Hotel---</v-list-item-subtitle>
+                <v-list-item-subtitle >---Silahkan Pesan Kamar---</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
 
@@ -35,6 +35,21 @@
                     <v-btn small class="mr-2 blue-grey lighten-3" @click="editItem(item)">edit</v-btn>
                     <v-btn small class="mr-2 blue-grey lighten-3" @click="deleteItem(item)">delete</v-btn>
                 </template>
+
+              
+                <template v-slot:[`item.id_kamar`]="{ item }">
+                  
+                        {{ getNameTipeKamar(item.id_kamar) }}
+               
+                </template>
+
+                <template v-slot:[`item.id_karyawan`]="{ item }">
+                  
+                        {{ getNameKaryawan(item.id_karyawan) }}
+
+                </template>
+
+
             </v-data-table>
         </v-card>
 
@@ -45,13 +60,6 @@
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <!-- <v-select
-                            v-model="formTodo.tipeKamar"
-                            :items="['Deluxe', 'Standar' , 'Semi-Standar']"
-                            label = "TipeKamar"
-                            required>
-                        </v-select> -->
-
                         <v-select
                         v-model="formTodo.kamar"
                         :items="kamars"
@@ -70,8 +78,8 @@
                         </v-text-field>
 
                         <v-select
-                        v-model="formTodo.kamar"
-                        :items="kamars"
+                        v-model="formTodo.karyawan"
+                        :items="karyawans"
                         item-text="nama"
                         item-value="id"
                         label="Nama Karyawan"
@@ -115,12 +123,15 @@ export default {
                     align: "start",
                     sortable: true,
                     value: "id_kamar",
+
                 },
                 { text: "Lama Inap", value: "lama_menginap" },
-                { text: "Nama Karyawn", value: "nama" },
+                { text: "Nama Karyawn", value: "id_karyawan" },
                 { text: "Action", value: "action" },
             ],
-            todos:[],
+            todos:[
+
+            ],
       
             };
         },
@@ -151,7 +162,7 @@ export default {
                 this.dialog=true;
             },
             showKamar(){
-                axios.get('http://localhost:8000/api/kamars', {
+                axios.get('https://frederikus.com/UAS_Hotel_B_Kel-A/public/api/kamars', {
 
                 })
                     .then((response) => {
@@ -162,20 +173,20 @@ export default {
                     console.log(error)
                     })
              },
-             showBookings(){
-                axios.get('http://localhost:8000/api/bookings', {
+            showBookings(){
+                axios.get('https://frederikus.com/UAS_Hotel_B_Kel-A/public/api/bookings', {
 
                 })
                     .then((response) => {
                     this.todos = response.data.data
-                    
+
                     })
                     .catch((error) => {
                     console.log(error)
                     })
              },
              showKaryawans(){
-                axios.get('http://localhost:8000/api/karyawans', {
+                axios.get('https://frederikus.com/UAS_Hotel_B_Kel-A/public/api/karyawans', {
 
                 })
                     .then((response) => {
@@ -187,7 +198,7 @@ export default {
                     })
              },
              addBookings(){
-                axios.post('http://localhost:8000/api/bookings', {
+                axios.post('https://frederikus.com/UAS_Hotel_B_Kel-A/public/api/bookings', {
                     id_user: 1, // ini nanti dari yang local storage yaww
                     id_kamar: this.formTodo.kamar.id,
                     lama_menginap: this.formTodo.lama_menginap,
@@ -212,12 +223,13 @@ export default {
              },
              editItem(item){
                 this.formTodo.id_update = item.id
+                this.formTodo.kamar = this.getNamaKamarObj(item.id_kamar)
                 this.formTodo.lama_menginap = item.lama_menginap
-                this.formTodo.nama = item.nama
+                this.formTodo.karyawan = this.getNamaKaryawanObj(item.id_karyawan)
                 this.dialog=true;
              },
             updateBookings(){
-                axios.put('http://localhost:8000/api/bookings/' + this.formTodo.id_update, {
+                axios.put('https://frederikus.com/UAS_Hotel_B_Kel-A/public/api/bookings/' + this.formTodo.id_update, {
                     id_user: 1, // ini nanti dari yang local storage yaww
                     id_kamar: this.formTodo.kamar.id,
                     lama_menginap: this.formTodo.lama_menginap,
@@ -242,7 +254,7 @@ export default {
                     })
             },
             deleteItem(item){
-                axios.delete('http://localhost:8000/api/bookings/' + item.id, {
+                axios.delete('https://frederikus.com/UAS_Hotel_B_Kel-A/public/api/bookings/' + item.id, {
                     //ini buayt askese token
                     // headers: {
                     // 'Authorization': `Bearer ${access_token}`
@@ -256,7 +268,23 @@ export default {
                     .catch((error) => {
                     console.log(error.response.data)
                     })
-            }
+            },
+            getNameTipeKamar(id_kamar){
+                let kamar = this.kamars.find(kamar => kamar.id == id_kamar)
+                return kamar.tipe_kamar
+            },
+            getNameKaryawan(id_karyawan){
+                let karyawan = this.karyawans.find(karyawan => karyawan.id == id_karyawan)
+                return karyawan.nama
+            },
+            getNamaKamarObj(id_kamar){
+                let kamar = this.kamars.find(kamar => kamar.id == id_kamar)
+                return kamar
+            },
+            getNamaKaryawanObj(id_karyawan){
+                let karyawan = this.karyawans.find(karyawan => karyawan.id == id_karyawan)
+                return karyawan
+            },
         },
     };
 </script>

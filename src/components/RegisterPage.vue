@@ -63,7 +63,6 @@
                     <v-text-field
                       label="Password"
                       v-model="password"
-                      :value="pass"
                       :append-icon="valueEye ? 'mdi-eye' : 'mdi-eye-off'"
                       @click:append="() => (valueEye = !valueEye)"
                       :type="valueEye ? 'password' : 'text'"
@@ -88,7 +87,6 @@
                       <v-spacer></v-spacer>
                       <v-btn
                         @click="submit"
-                        type="submit"
                         class="blue darken-3 white--text mt-2"
                         >Submit
                       </v-btn>
@@ -112,7 +110,10 @@
   </div>
 </template>
 
+
 <script>
+
+import axios from 'axios';
 export default {
   name: "RegisterPage",
   data() {
@@ -137,30 +138,47 @@ export default {
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
+        alert("masuk bos")
         this.load = true;
-        this.$http.post(this.$api + "/register", {
-            nama: this.nama,
-            umur: this.umur,
-            gender: this.gender,
-            alamat: this.alamat,
-            no_hp: this.no_hp,
-            username: this.username,
-            email: this.email,
-            password: this.password,
-            status: this.status,
+
+        let nama = this.nama
+        let umur = this.umur
+        let gender = this.gender
+        let alamat = this.alamat
+        let no_hp = this.no_hp
+        let username = this.username
+        let email = this.email
+        let password = this.password
+        let status = this.status
+
+        alert(nama);
+
+
+        axios.post("https://frederikus.com/UAS_Hotel_B_Kel-A/public/api/register", {
+            nama: nama,
+            umur: umur,
+            gender: gender,
+            alamat: alamat,
+            no_hp: no_hp,
+            username: username,
+            email: email,
+            password: password,
+            status: status,
           })
           .then((response) => {
-            this.error_message = response.data.message;
+            this.error_message = response;
+            console.log(response);
             this.statusColor = "green";
             this.snackbar = true;
             this.load = false;
-            this.clear();
+            alert("masuk tresponse")
             this.$router.push({
-              name: "Root",
+              name: "Login",
             });
           })
           .catch((error) => {
-            this.error_message = error.response.data.message;
+            console.log(error.response.data)
+            alert("masuk error")
             this.statusColor = "red";
             this.snackbar = true;
 

@@ -49,7 +49,7 @@
 
 import axios from "axios";
 
-	let baseAPI = "http://127.0.0.1:8000/api/";
+	let baseAPI = "https://frederikus.com/UAS_Hotel_B_Kel-A/public/api/";
 
 export default {
 
@@ -117,7 +117,7 @@ export default {
 
 				.catch((error) => {
 
-					console.log(error)
+					console.log(error.response.data)
 
 					this.statusColor = "red";
 					this.snackbar = true;
